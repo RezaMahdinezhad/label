@@ -75,30 +75,32 @@ class EndPoint {
   static String ipGeoLocation =
       "https://api.freegeoip.app/json/?apikey=382954c0-a768-11ec-a25f-c15a70f1ce63";
 
-  static String loginArtist = "https://dangify.net/api/dangifyforartist-login";
-  static String artistData = "https://dangify.net/api/dangifyforartist-data";
-  static String artistTracksData =
-      "https://dangify.net/api/dangifyforartist-tracks";
+  static String loginArtist = "api/dangifyforartist-login";
+  static String artistData = "api/dangifyforartist-data";
+  static String artistTracksData = "api/dangifyforartist-tracks";
 
-  static String artistSingleTrackData =
-      "https://dangify.net/api/dangifyforartist-single";
+  static String artistSingleTrackData = "api/dangifyforartist-single";
 
-  static String artistSingleTrackGraphData =
-      "https://dangify.net/api/dangifyforartist-singlegraph";
+  static String artistSingleTrackGraphData = "api/dangifyforartist-singlegraph";
 
-  static String artistProfileData =
-      "https://dangify.net/api/dangifyforartist-profile";
+  static String artistProfileData = "api/dangifyforartist-profile";
 
-  static String artistStaticData =
-      "https://dangify.net/api/dangifyforartist-graph";
+  static String artistStaticData = "api/dangifyforartist-graph";
 
-  static String artistEditProfile =
-      "https://dangify.net/api/dangifyforartist-edit";
-  static String genre = "https://dangify.net/api/dangifyforartist-genres";
-  static String language = "https://dangify.net/api/dangifyforartist-language";
-  static String uploadTrack = "https://dangify.net/api/dangifyforartist-upload";
-  static String reviewTrack = "https://dangify.net/api/dangifyforartist-review";
-  static String getMessage = "https://dangify.net/api/dangifyforartist-message";
-  static String requestToJoin =
-      "https://dangify.net/api/dangifyforartist-requesttojoin";
+  static String artistEditProfile = "api/dangifyforartist-edit";
+  static String genre = "api/dangifyforartist-genres";
+  static String language = "api/dangifyforartist-language";
+  static String uploadTrack = "api/dangifyforartist-upload";
+  static String reviewTrack = "api/dangifyforartist-review";
+  static String getMessage = "api/dangifyforartist-message";
+  static String requestToJoin = "api/dangifyforartist-requesttojoin";
+  static String labelLogin = "api/dangifyforlabel-login";
+  static String labelData = "api/dangifyforlabel-data";
+  static String labelAllArtists = "api/dangifyforlabel-artists";
+  static String labelTracks = "api/dangifyforlabel-tracks";
+  static String labelArtists = "api/dangifyforlabel-artists";
+  static String labelSingleTrack = "api/dangifyforlabel-single";
+  static String labelSingleTrackGraph = "api/dangifyforlabel-singlegraph";
+  static String labelArtistGraph = "api/dangifyforlabel-artistgraph";
+  static String labelGraph = "api/dangifyforlabel-graph";
 }

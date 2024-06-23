@@ -1108,7 +1108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        LogInPage(),
+                                        ArtistLogInPage(),
                                   ),
                                 );
                               },

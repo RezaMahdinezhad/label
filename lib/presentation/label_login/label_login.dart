@@ -1,22 +1,20 @@
 import 'package:label/common/helper/screen_helper.dart';
-import 'package:label/presentation/login/login_controller.dart';
-import 'package:label/presentation/request/request.dart';
-import 'package:label/presentation/request/request_controller.dart';
+import 'package:label/presentation/label_login/label_login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class ArtistLogInPage extends StatelessWidget {
-  ArtistLogInPage({super.key});
-  final ArtistLoginController controller = Get.put(ArtistLoginController());
+class LabelLogInPage extends StatelessWidget {
+  LabelLogInPage({super.key});
+  final LabelLoginController controller = Get.put(LabelLoginController());
   // final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffF9F9F9),
-      body: GetX<ArtistLoginController>(builder: (_) {
+      body: GetX<LabelLoginController>(builder: (_) {
         return SingleChildScrollView(
           padding: EdgeInsets.only(bottom: ScreenHelper().setheight(40)),
           child: Center(
@@ -189,37 +187,6 @@ class ArtistLogInPage extends StatelessWidget {
                           },
                         ),
                       ),
-                SizedBox(
-                  height: ScreenHelper().setheight(40),
-                ),
-                Container(
-                  width: ScreenHelper().setWidth(320),
-                  height: ScreenHelper().setheight(46),
-                  child: ElevatedButton(
-                    child: Text(
-                      'Request to Join Dangify Artists',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(ScreenHelper().setRadius(10)),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(
-                        context,
-                      )
-                          .push(MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  RequesttoJoin()))
-                          .then((value) {
-                        Get.delete<RequestController>();
-                      });
-                    },
-                  ),
-                ),
                 SizedBox(
                   height: ScreenHelper().setheight(40),
                 ),

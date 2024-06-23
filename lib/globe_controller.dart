@@ -1,3 +1,5 @@
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:label/base_controller.dart';
 import 'package:label/domain/models/receive/login_model.dart';
 import 'package:label/presentation/artist_screen/artist_controller.dart';
@@ -18,8 +20,6 @@ class GlobeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // getMessage();
-    // loadTokenAndUser();
   }
 
   String? accessToken;
@@ -33,6 +33,17 @@ class GlobeController extends GetxController {
   final box = GetStorage();
 
   bool hasToken = false;
+
+  //type 1 = artist type 2 = label
+  RxInt loginType = 0.obs;
+  saveType(int value) {
+    loginType.value = value;
+    box.write('loginType', value);
+  }
+
+  loadType() {
+    loginType.value = box.read('loginType') ?? 0;
+  }
 
   setUploadProgressValue(value) {
     _uploadProgressValue = value;
@@ -93,7 +104,7 @@ class GlobeController extends GetxController {
 
     removeTokenAndUser();
     // Get.find<BaseController>().update();
-    Get.delete<LoginController>();
+    Get.delete<ArtistLoginController>();
     // Get.delete<GlobeController>();
     Get.delete<BaseController>();
     Get.delete<ArtistDataController>();

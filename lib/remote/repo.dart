@@ -83,8 +83,42 @@ class RepositoryImpl implements IRepository {
         // 'password': data.password,
         ...changes
       });
-      dio.Response res =
-          await _httpService.postRequest(EndPoint.loginArtist, data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.loginArtist, data: formData);
+      return Right(
+        Success(
+            data: LoginModel.fromMap(res.data),
+            message: Fluttertoast.showToast(msg: 'Welcome!').toString()),
+      );
+    } catch (e) {
+      return Left(
+        Failure(
+            message: Fluttertoast.showToast(
+                    msg: 'Your username or password is not correct.')
+                .toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Success>> labelLogin(LoginModelSend data) async {
+    final Map<String, dynamic> changes = {};
+    if (data.username != null) {
+      changes['username'] = data.username;
+      changes['password'] = data.password;
+    } else {
+      changes['email'] = data.email;
+      changes['password'] = data.password;
+    }
+    try {
+      final formData = dio.FormData.fromMap({
+        // 'username': data.username,
+        // // 'email': data.email,
+        // 'password': data.password,
+        ...changes
+      });
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.loginArtist, data: formData);
       return Right(
         Success(
             data: LoginModel.fromMap(res.data),
@@ -103,7 +137,8 @@ class RepositoryImpl implements IRepository {
   @override
   Future<Either<Failure, Success>> fetchArtistData(String authToken) async {
     try {
-      dio.Response res = await _httpService.postRequest(EndPoint.artistData);
+      dio.Response res =
+          await _httpService.postRequest(EndPoint.base + EndPoint.artistData);
       final responseData = res.data;
       // final artistData = ArtistdataModel.fromMap(responseData['data']);
       return Right(
@@ -124,8 +159,9 @@ class RepositoryImpl implements IRepository {
   Future<Either<Failure, Success>> fetchArtistTrackData(
       String authToken, int page) async {
     try {
-      dio.Response res = await _httpService
-          .postRequest(EndPoint.artistTracksData, data: {'page': page});
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.artistTracksData,
+          data: {'page': page});
 
       final responseData = res.data;
       final tracksData = responseData['data'] as List<dynamic>;
@@ -148,8 +184,9 @@ class RepositoryImpl implements IRepository {
     try {
       final formData =
           dio.FormData.fromMap({'token': authToken, 'track_id': trackId});
-      dio.Response res = await _httpService
-          .postRequest(EndPoint.artistSingleTrackData, data: formData);
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.artistSingleTrackData,
+          data: formData);
 
       final responseData = res.data;
       final trackData = responseData['tarck'];
@@ -166,8 +203,9 @@ class RepositoryImpl implements IRepository {
     try {
       final formData = dio.FormData.fromMap(
           {'token': authToken, 'track_id': trackId, 'days': days});
-      dio.Response res = await _httpService
-          .postRequest(EndPoint.artistSingleTrackGraphData, data: formData);
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.artistSingleTrackGraphData,
+          data: formData);
 
       final responseData = res.data;
       return Right(
@@ -183,8 +221,9 @@ class RepositoryImpl implements IRepository {
       {'token': authToken},
     );
     try {
-      dio.Response res = await _httpService
-          .postRequest(EndPoint.artistProfileData, data: formData);
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.artistProfileData,
+          data: formData);
 
       final responseData = res.data;
       // final profileData = responseData['data'];
@@ -349,8 +388,8 @@ class RepositoryImpl implements IRepository {
     );
 
     try {
-      dio.Response res =
-          await _httpService.postRequest(EndPoint.genre, data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.genre, data: formData);
 
       final responseData = res.data;
       return Right(
@@ -368,8 +407,8 @@ class RepositoryImpl implements IRepository {
     );
 
     try {
-      dio.Response res =
-          await _httpService.postRequest(EndPoint.language, data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.language, data: formData);
 
       final responseData = res.data;
 
@@ -417,8 +456,8 @@ class RepositoryImpl implements IRepository {
     );
 
     try {
-      dio.Response res =
-          await _httpService.postRequest(EndPoint.uploadTrack, data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.uploadTrack, data: formData);
 
       final responseData = res.data;
       return Right(
@@ -436,8 +475,8 @@ class RepositoryImpl implements IRepository {
     );
 
     try {
-      dio.Response res =
-          await _httpService.postRequest(EndPoint.reviewTrack, data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.reviewTrack, data: formData);
 
       final responseData = res.data;
       return Right(
@@ -458,8 +497,8 @@ class RepositoryImpl implements IRepository {
       },
     );
     try {
-      dio.Response res = await _httpService.postRequest(EndPoint.requestToJoin,
-          data: formData);
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.requestToJoin, data: formData);
       return Right(Success(data: res.data));
     } catch (e) {
       return Left(

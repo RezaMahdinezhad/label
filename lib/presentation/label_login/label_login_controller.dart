@@ -12,7 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class ArtistLoginController extends GetxController {
+class LabelLoginController extends GetxController {
   late RepositoryImpl _repo;
   var isLoading = false.obs;
   var isValid = true.obs;
@@ -94,7 +94,7 @@ class ArtistLoginController extends GetxController {
       Fluttertoast.showToast(msg: 'Username and Password are required.');
     } else {
       isLoading.value = true;
-      Either<Failure, Success> res = await _repo.login(loginModelSend);
+      Either<Failure, Success> res = await _repo.labelLogin(loginModelSend);
 
       res.fold(
         (l) async {
@@ -108,8 +108,7 @@ class ArtistLoginController extends GetxController {
         },
         (r) async {
           LoginModel loginModel = r.data;
-          globeController.saveType(1);
-
+          globeController.saveType(2);
           print('Received token: ${loginModel.token}');
           globeController.accessToken = loginModel.token;
           globeController.saveTokenAndUser(LoginModel(token: loginModel.token));
