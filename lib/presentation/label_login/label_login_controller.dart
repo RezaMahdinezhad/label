@@ -107,7 +107,8 @@ class LabelLoginController extends GetxController {
           update();
         },
         (r) async {
-          LoginModel loginModel = r.data;
+          LoginModel loginModel = LoginModel();
+          loginModel.token = r.data['token'][0]['token'].toString();
           globeController.saveType(2);
           print('Received token: ${loginModel.token}');
           globeController.accessToken = loginModel.token;

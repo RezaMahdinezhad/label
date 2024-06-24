@@ -27,8 +27,8 @@ class ArtistdataModel extends Equatable {
     this.monthly_listener,
     this.totla_listener,
     this.live_listen,
-    required this.bank,
-    required this.total_income,
+    this.bank,
+    this.total_income,
   });
 
   ArtistdataModel copyWith({

@@ -104,8 +104,8 @@ class RepositoryImpl implements IRepository {
   Future<Either<Failure, Success>> labelLogin(LoginModelSend data) async {
     final Map<String, dynamic> changes = {};
     if (data.username != null) {
-      changes['username'] = data.username;
-      changes['password'] = data.password;
+      changes['username'] = data.username.toString();
+      changes['password'] = data.password.toString();
     } else {
       changes['email'] = data.email;
       changes['password'] = data.password;
@@ -118,10 +118,10 @@ class RepositoryImpl implements IRepository {
         ...changes
       });
       dio.Response res = await _httpService
-          .postRequest(EndPoint.base + EndPoint.loginArtist, data: formData);
+          .postRequest(EndPoint.base + EndPoint.labelLogin, data: formData);
       return Right(
         Success(
-            data: LoginModel.fromMap(res.data),
+            data: res.data,
             message: Fluttertoast.showToast(msg: 'Welcome!').toString()),
       );
     } catch (e) {
@@ -139,6 +139,28 @@ class RepositoryImpl implements IRepository {
     try {
       dio.Response res =
           await _httpService.postRequest(EndPoint.base + EndPoint.artistData);
+      final responseData = res.data;
+      // final artistData = ArtistdataModel.fromMap(responseData['data']);
+      return Right(
+        Success(
+          data: responseData,
+          // message: Fluttertoast.showToast(msg: 'Welcome Artist!').toString()
+        ),
+      );
+    } catch (e) {
+      return Left(
+        Failure(
+          message: '',
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Success>> fetchLabelData() async {
+    try {
+      dio.Response res =
+          await _httpService.postRequest(EndPoint.base + EndPoint.labelData);
       final responseData = res.data;
       // final artistData = ArtistdataModel.fromMap(responseData['data']);
       return Right(

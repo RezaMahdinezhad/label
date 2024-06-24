@@ -43,4 +43,5 @@ abstract class IRepository {
   Future<Either<Failure, Success>> requestToJoin(RequestModel data);
   Future<Either<Failure, Success>> getMessage();
   Future<Either<Failure, Success>> labelLogin(LoginModelSend data);
+  Future<Either<Failure, Success>> fetchLabelData();
 }
