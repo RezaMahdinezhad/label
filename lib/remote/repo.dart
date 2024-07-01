@@ -33,7 +33,7 @@ class RepositoryImpl implements IRepository {
   }
 
   String handleError(e) {
-    if (e is DioError) {
+    if (e is dio.DioException) {
       if (e.response != null &&
           e.response?.data != null &&
           e.response?.data != "") {
@@ -201,6 +201,30 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> fetchLabelTrackData(
+      {int? order, String? name, int? page, String? artistId}) async {
+    try {
+      final formData = dio.FormData.fromMap(
+          {'order': order, 'name': name, 'page': page, 'artist_id': artistId});
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.labelTracks, data: formData);
+
+      final responseData = res.data;
+      final tracksData = responseData['data'] as List<dynamic>;
+
+      // Check if there are more tracks to load
+      // bool hasMoreTracks = tracksData.length < tracksPerPage;
+
+      // Convert and return tracks as a result
+      final tracks =
+          tracksData.map((track) => TrackModel.fromMap(track)).toList();
+      return Right(
+          Success(data: tracks, message: 'Tracks label loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed label to fetch artist tracks'));
+    }
+  }
+
   Future<Either<Failure, Success>> fetchArtistSingleTrackData(
       String authToken, String trackId) async {
     try {
@@ -220,6 +244,25 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> fetchLabelSingleTrackData(
+      String authToken, String trackId) async {
+    try {
+      final formData =
+          dio.FormData.fromMap({'token': authToken, 'track_id': trackId});
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.labelSingleTrack,
+          data: formData);
+
+      final responseData = res.data;
+      final trackData = responseData['tarck'];
+      final firsttrackData = SingleTrackModel.fromMap(trackData);
+      return Right(
+          Success(data: firsttrackData, message: 'Tracks loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed to fetch artist tracks'));
+    }
+  }
+
   Future<Either<Failure, Success>> fetchArtistSingleTrackChartData(
       String authToken, String trackId, String days) async {
     try {
@@ -227,6 +270,23 @@ class RepositoryImpl implements IRepository {
           {'token': authToken, 'track_id': trackId, 'days': days});
       dio.Response res = await _httpService.postRequest(
           EndPoint.base + EndPoint.artistSingleTrackGraphData,
+          data: formData);
+
+      final responseData = res.data;
+      return Right(
+          Success(data: responseData, message: 'Tracks loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed to fetch artist tracks'));
+    }
+  }
+
+  Future<Either<Failure, Success>> fetchLabelSingleTrackChartData(
+      String authToken, String trackId, String days) async {
+    try {
+      final formData = dio.FormData.fromMap(
+          {'token': authToken, 'track_id': trackId, 'days': days});
+      dio.Response res = await _httpService.postRequest(
+          EndPoint.base + EndPoint.labelSingleTrackGraph,
           data: formData);
 
       final responseData = res.data;

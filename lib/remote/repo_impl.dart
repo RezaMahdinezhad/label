@@ -44,4 +44,10 @@ abstract class IRepository {
   Future<Either<Failure, Success>> getMessage();
   Future<Either<Failure, Success>> labelLogin(LoginModelSend data);
   Future<Either<Failure, Success>> fetchLabelData();
+  Future<Either<Failure, Success>> fetchLabelTrackData(
+      {int? order, String? name, int? page, String? artistId});
+  Future<Either<Failure, Success>> fetchLabelSingleTrackData(
+      String authToken, String trackId);
+  Future<Either<Failure, Success>> fetchLabelSingleTrackChartData(
+      String authToken, String trackId, String days);
 }

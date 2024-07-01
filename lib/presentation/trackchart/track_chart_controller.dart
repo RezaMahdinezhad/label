@@ -151,19 +151,47 @@ class TrackChartController extends GetxController {
   }
 
   Future<void> getTrackData() async {
-    if (trackId.value.isEmpty) {
-      return;
-    }
-    await getSingleTrackData(trackId.value);
-    await getSingleTrackChartData(trackId.value, days.value);
-    isLoadingGraph.value = false;
+    if (globeController.loginType.value == 1) {
+      if (trackId.value.isEmpty) {
+        return;
+      }
+      await getSingleTrackData(trackId.value);
+      await getSingleTrackChartData(trackId.value, days.value);
+      isLoadingGraph.value = false;
 
-    isLoading.value = false;
+      isLoading.value = false;
+    } else {
+      if (trackId.value.isEmpty) {
+        return;
+      }
+      await getLabelSingleTrackData(trackId.value);
+      await getLabelSingleTrackChartData(trackId.value, days.value);
+    }
   }
 
   getSingleTrackData(String trackId) async {
     try {
       Either<Failure, Success> result = await _repo.fetchArtistSingleTrackData(
+          globeController.accessToken.toString(), trackId);
+      result.fold(
+        (failure) {
+          print('Failed to fetch artist data: ${failure.message}');
+        },
+        (success) {
+          singleTrackData = success.data as SingleTrackModel;
+          print('------${singleTrackData.CPM}');
+
+          update();
+        },
+      );
+    } catch (error) {
+      print('Error occurred while fetching artist data: $error');
+    }
+  }
+
+  getLabelSingleTrackData(String trackId) async {
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelSingleTrackData(
           globeController.accessToken.toString(), trackId);
       result.fold(
         (failure) {
@@ -219,6 +247,56 @@ class TrackChartController extends GetxController {
           sex2 = SexesModel.fromMap(success.data['Sexes'][1]);
           sex3 = SexesModel.fromMap(success.data['Sexes'][2]);
           isLoadingGraph.value = false;
+
+          update();
+        },
+      );
+    } catch (error) {
+      print('Error occurred while fetching artist chartttt data: $error');
+    }
+  }
+
+  getLabelSingleTrackChartData(String trackId, String days) async {
+    try {
+      Either<Failure, Success> result =
+          await _repo.fetchLabelSingleTrackChartData(
+              globeController.accessToken.toString(), trackId, days);
+      result.fold(
+        (failure) {
+          print('Failed to fetch artist data: ${failure.message}');
+        },
+        (success) {
+          chartDate = Map<String, int>.from(success.data['listenersGraph']);
+          incomeDate = Map<String, dynamic>.from(success.data['incomeGraph']);
+          print('----$incomeDate');
+
+          final topCountriesData = success.data['topCountries'];
+          topCountries.clear();
+          for (var item in topCountriesData) {
+            topCountries.add(TopCountriesModel.fromMap(item));
+          }
+
+          final topCitiesData = success.data['topCities'];
+          topCities.clear();
+          for (var item in topCitiesData) {
+            topCities.add(CityModel.fromMap(item));
+          }
+
+          final topSexesData = success.data['Sexes'];
+          topSexes.clear();
+          for (var item in topSexesData) {
+            topSexes.add(SexesModel.fromMap(item));
+          }
+
+          country1 = TopCountriesModel.fromMap(success.data['topCountries'][0]);
+          city1 = CityModel.fromMap(success.data['topCities'][0]);
+          sex1 = SexesModel.fromMap(success.data['Sexes'][0]);
+          sex2 = SexesModel.fromMap(success.data['Sexes'][1]);
+          sex3 = SexesModel.fromMap(success.data['Sexes'][2]);
+          isLoadingGraph.value = false;
+          isLoadingGraph.value = false;
+
+          isLoading.value = false;
 
           update();
         },

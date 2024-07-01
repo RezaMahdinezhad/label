@@ -24,6 +24,7 @@ class ArtistDataController extends GetxController {
 
   var isLoading = true.obs;
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
 
   String formatNumber(int number) {
     if (number >= 1000 && number < 1000000) {
@@ -109,12 +110,26 @@ class ArtistDataController extends GetxController {
 
   Future<void> loadMoreTracks() async {
     if (hasMoreTracks) {
-      isLoadingMore.value = true;
-      currentTrackPage.value++;
-      await getTracks();
-      isLoadingMore.value = false;
+      if (globeController.loginType.value == 1) {
+        isLoadingMore.value = true;
+        currentTrackPage.value++;
+        await getTracks();
+        isLoadingMore.value = false;
+      } else {
+        isLoadingMore.value = true;
+        currentTrackPage.value++;
+        await getLabelTracks(
+            order: order.value,
+            name: textEditingController.text,
+            artistId: artistId.value,
+            page: currentTrackPage.value);
+        isLoadingMore.value = false;
+      }
     }
   }
+
+  RxInt order = 0.obs;
+  RxString artistId = ''.obs;
 
   Future<void> fetchArtistDataOnrefresh() async {
     await getData();
@@ -129,6 +144,57 @@ class ArtistDataController extends GetxController {
 
   Future<void> fetchLabelData() async {
     await getLabelData();
+    await getLabelTracks(order: 2, name: '', page: 1, artistId: '');
+  }
+
+  getLabelTracks(
+      {int? order, String? name, int? page, String? artistId}) async {
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelTrackData(
+          order: order, name: name, page: page, artistId: artistId);
+      result.fold((l) async {
+        print('Failed to fetch artist tracks: nashoooodd');
+      }, (r) async {
+        final List<TrackModel> tracks = r.data as List<TrackModel>;
+        artistTracks.addAll(tracks);
+        update();
+        if (tracks.isEmpty) {
+          hasMoreTracks = false;
+        }
+      });
+    } catch (error) {
+      print('Error occurred while fetching artist tracks: $error');
+    }
+  }
+
+  getLabelData() async {
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelData();
+      result.fold(
+        (failure) {
+          print('Failed to fetch Label data: ${failure.message}');
+        },
+        (success) {
+          // artistData = ArtistdataModel.fromMap(success.data['data']);
+          artistData.name = success.data['data']['name'];
+          artistData.picture_url = success.data['data']['picture_url'];
+          artistData.total_income = success.data['data']['total_income'];
+          artistData.bank = success.data['data']['bank'];
+          artistData.total_play =
+              int.parse(success.data['data']['total_play'].toString());
+          artistData.likes = int.parse(success.data['data']['likes']);
+          artistData.totla_listener = success.data['data']['total_listener'];
+          artistData.monthly_listener =
+              success.data['data']['monthly_listener'];
+          artistData.live_listen = success.data['data']['live_listen'];
+          isLoading.value = false;
+
+          update();
+        },
+      );
+    } catch (error) {
+      print('Error occurred while fetching artist data: $error');
+    }
   }
 
   getTracks() async {
@@ -161,36 +227,6 @@ class ArtistDataController extends GetxController {
         (success) {
           artistData = ArtistdataModel.fromMap(success.data['data']);
           lastPage.value = success.data['last_page'] ?? 1;
-          update();
-        },
-      );
-    } catch (error) {
-      print('Error occurred while fetching artist data: $error');
-    }
-  }
-
-  getLabelData() async {
-    try {
-      Either<Failure, Success> result = await _repo.fetchLabelData();
-      result.fold(
-        (failure) {
-          print('Failed to fetch Label data: ${failure.message}');
-        },
-        (success) {
-          // artistData = ArtistdataModel.fromMap(success.data['data']);
-          artistData.name = success.data['data']['name'];
-          artistData.picture_url = success.data['data']['picture_url'];
-          artistData.total_income = success.data['data']['total_income'];
-          artistData.bank = success.data['data']['bank'];
-          artistData.total_play =
-              int.parse(success.data['data']['total_play'].toString());
-          artistData.likes = int.parse(success.data['data']['likes']);
-          artistData.totla_listener = success.data['data']['total_listener'];
-          artistData.monthly_listener =
-              success.data['data']['monthly_listener'];
-          artistData.live_listen = success.data['data']['live_listen'];
-          isLoading.value = false;
-
           update();
         },
       );

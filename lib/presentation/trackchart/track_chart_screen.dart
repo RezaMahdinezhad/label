@@ -257,29 +257,64 @@ class TrackChartScreen extends StatelessWidget {
                                   children: controller.items,
                                   groupValue: controller.selectedDayIndex.value,
                                   onValueChanged: (value) {
-                                    if (value == 0) {
-                                      controller.days.value = '7';
-                                      controller.selectedDayIndex.value = value;
-                                      controller.isLoadingGraph.value = true;
-                                      controller.getSingleTrackChartData(
-                                          trackId, '7');
-                                      controller.update();
-                                    } else if (value == 1) {
-                                      controller.isLoadingGraph.value = true;
-                                      controller.days.value = '28';
-                                      controller.selectedDayIndex.value = value;
+                                    if (controller
+                                            .globeController.loginType.value ==
+                                        1) {
+                                      if (value == 0) {
+                                        controller.days.value = '7';
+                                        controller.selectedDayIndex.value =
+                                            value;
+                                        controller.isLoadingGraph.value = true;
+                                        controller.getSingleTrackChartData(
+                                            trackId, '7');
+                                        controller.update();
+                                      } else if (value == 1) {
+                                        controller.isLoadingGraph.value = true;
+                                        controller.days.value = '28';
+                                        controller.selectedDayIndex.value =
+                                            value;
 
-                                      controller.getSingleTrackChartData(
-                                          trackId, '28');
-                                      controller.update();
+                                        controller.getSingleTrackChartData(
+                                            trackId, '28');
+                                        controller.update();
+                                      } else {
+                                        controller.days.value = '90';
+                                        controller.selectedDayIndex.value =
+                                            value;
+                                        controller.isLoadingGraph.value = true;
+
+                                        controller.getSingleTrackChartData(
+                                            trackId, '90');
+                                        controller.update();
+                                      }
                                     } else {
-                                      controller.days.value = '90';
-                                      controller.selectedDayIndex.value = value;
-                                      controller.isLoadingGraph.value = true;
+                                      if (value == 0) {
+                                        controller.days.value = '7';
+                                        controller.selectedDayIndex.value =
+                                            value;
+                                        controller.isLoadingGraph.value = true;
+                                        controller.getLabelSingleTrackChartData(
+                                            trackId, '7');
+                                        controller.update();
+                                      } else if (value == 1) {
+                                        controller.isLoadingGraph.value = true;
+                                        controller.days.value = '28';
+                                        controller.selectedDayIndex.value =
+                                            value;
 
-                                      controller.getSingleTrackChartData(
-                                          trackId, '90');
-                                      controller.update();
+                                        controller.getLabelSingleTrackChartData(
+                                            trackId, '28');
+                                        controller.update();
+                                      } else {
+                                        controller.days.value = '90';
+                                        controller.selectedDayIndex.value =
+                                            value;
+                                        controller.isLoadingGraph.value = true;
+
+                                        controller.getLabelSingleTrackChartData(
+                                            trackId, '90');
+                                        controller.update();
+                                      }
                                     }
                                   }),
                             ),
