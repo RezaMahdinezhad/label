@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:label/common/helper/screen_helper.dart';
 import 'package:label/domain/repository/remote/endpoint.dart';
 import 'package:label/presentation/artist_screen/artist_controller.dart';
@@ -660,7 +661,7 @@ class ArtistScreen extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Container(
-                                          padding: EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8.0),
                                           width: ScreenHelper.deWidth / 2,
                                           height: ScreenHelper.dHeight / 15,
                                           decoration: BoxDecoration(
@@ -690,6 +691,29 @@ class ArtistScreen extends StatelessWidget {
                                                 hintText:
                                                     'Search tracks, artists...',
                                                 border: InputBorder.none),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          width: ScreenHelper.deWidth / 4,
+                                          height: ScreenHelper.dHeight / 15,
+                                          child:
+                                              DropdownButtonFormField<String>(
+                                            autovalidateMode:
+                                                AutovalidateMode.disabled,
+                                            isExpanded: true,
+                                            hint: Text('All Artists'),
+                                            elevation: 0,
+                                            onChanged: (value) {},
+                                            items: controller.allArtistItems,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            decoration: InputDecoration(
+                                              icon: const SizedBox(),
+                                              border: InputBorder.none,
+                                            ),
                                           ),
                                         ),
                                       ],

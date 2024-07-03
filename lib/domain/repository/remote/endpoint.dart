@@ -96,7 +96,7 @@ class EndPoint {
   static String requestToJoin = "api/dangifyforartist-requesttojoin";
   static String labelLogin = "api/dangifyforlabel-login";
   static String labelData = "api/dangifyforlabel-data";
-  static String labelAllArtists = "api/dangifyforlabel-artists";
+  static String labelAllArtists = "api/dangifyforlabel-all-artists";
   static String labelTracks = "api/dangifyforlabel-tracks";
   static String labelArtists = "api/dangifyforlabel-artists";
   static String labelSingleTrack = "api/dangifyforlabel-single";

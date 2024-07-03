@@ -1,8 +1,13 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:label/domain/models/failure.dart';
 import 'package:label/domain/models/receive/artist_data_model.dart';
+import 'package:label/domain/models/receive/label_artists.dart';
 import 'package:label/domain/models/receive/message_madel.dart';
 import 'package:label/domain/models/receive/track_model.dart';
 import 'package:label/domain/models/succes.dart';
+import 'package:label/domain/repository/remote/endpoint.dart';
 import 'package:label/globe_controller.dart';
 import 'package:label/remote/repo.dart';
 import 'package:dartz/dartz.dart';
@@ -145,6 +150,7 @@ class ArtistDataController extends GetxController {
   Future<void> fetchLabelData() async {
     await getLabelData();
     await getLabelTracks(order: 2, name: '', page: 1, artistId: '');
+    await getLabelAllArtists();
   }
 
   RxBool isLoadingTracks = true.obs;
@@ -210,6 +216,58 @@ class ArtistDataController extends GetxController {
       );
     } catch (error) {
       print('Error occurred while fetching artist data: $error');
+    }
+  }
+
+  RxBool isAllArtistsLoaded = false.obs;
+  List<LabelArtists> allArtists = [];
+
+  getLabelAllArtists() async {
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelAllArtists();
+      result.fold((l) async {
+        print('Failed to fetch artist tracks: nashoooodd');
+      }, (r) async {
+        allArtists.clear();
+        for (var item in r.data['data']) {
+          allArtists.add(LabelArtists(
+            name: item['name'].toString(),
+            artist_id: item['artist_id'] ?? 0,
+            picture_url: item['picture_url'].toString(),
+          ));
+        }
+        log('eeeeeeee ${allArtists.length}');
+        await buildLabelDropDownAllArtists();
+        isAllArtistsLoaded.value = true;
+        update();
+      });
+    } catch (error) {
+      isAllArtistsLoaded.value = false;
+      print('Error occurred while fetching artist tracks: $error');
+    }
+  }
+
+  List<DropdownMenuItem<String>> allArtistItems = [];
+  buildLabelDropDownAllArtists() {
+    allArtistItems.clear();
+    for (var item in allArtists) {
+      allArtistItems.add(DropdownMenuItem(
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.grey,
+              backgroundImage: AssetImage('assets/Artist/artist1.PNG'),
+              foregroundImage: CachedNetworkImageProvider(
+                  EndPoint.base + item.picture_url.toString()),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Text(item.name.toString())
+          ],
+        ),
+        value: item.artist_id.toString(),
+      ));
     }
   }
 

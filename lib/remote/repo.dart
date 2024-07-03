@@ -263,6 +263,19 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> fetchLabelAllArtists() async {
+    try {
+      dio.Response res = await _httpService.postRequest(
+        EndPoint.base + EndPoint.labelAllArtists,
+      );
+
+      return Right(
+          Success(data: res.data, message: 'Tracks loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed to fetch artist tracks'));
+    }
+  }
+
   Future<Either<Failure, Success>> fetchArtistSingleTrackChartData(
       String authToken, String trackId, String days) async {
     try {
