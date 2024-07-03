@@ -147,22 +147,38 @@ class ArtistDataController extends GetxController {
     await getLabelTracks(order: 2, name: '', page: 1, artistId: '');
   }
 
+  RxBool isLoadingTracks = true.obs;
+
   getLabelTracks(
-      {int? order, String? name, int? page, String? artistId}) async {
+      {required int order,
+      required String name,
+      required int page,
+      required String artistId}) async {
+    update();
     try {
       Either<Failure, Success> result = await _repo.fetchLabelTrackData(
           order: order, name: name, page: page, artistId: artistId);
       result.fold((l) async {
+        isLoadingTracks.value = true;
+
         print('Failed to fetch artist tracks: nashoooodd');
       }, (r) async {
         final List<TrackModel> tracks = r.data as List<TrackModel>;
+        if (page == 1) {
+          artistTracks.clear();
+        }
         artistTracks.addAll(tracks);
         update();
         if (tracks.isEmpty) {
           hasMoreTracks = false;
         }
+        isLoadingTracks.value = false;
+
+        update();
       });
     } catch (error) {
+      isLoadingTracks.value = true;
+
       print('Error occurred while fetching artist tracks: $error');
     }
   }

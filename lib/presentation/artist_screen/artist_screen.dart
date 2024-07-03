@@ -655,6 +655,46 @@ class ArtistScreen extends StatelessWidget {
                                   SizedBox(
                                     height: ScreenHelper().setheight(6),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          width: ScreenHelper.deWidth / 2,
+                                          height: ScreenHelper.dHeight / 15,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: TextFormField(
+                                            onChanged: (value) async {
+                                              controller
+                                                  .currentTrackPage.value = 1;
+                                              controller.isLoadingTracks.value =
+                                                  true;
+
+                                              controller.update();
+                                              await controller.getLabelTracks(
+                                                  order: controller.order.value,
+                                                  name: value,
+                                                  page: controller
+                                                      .currentTrackPage.value,
+                                                  artistId: controller
+                                                      .artistId.value);
+                                            },
+                                            controller: controller
+                                                .textEditingController,
+                                            decoration: InputDecoration(
+                                                hintText:
+                                                    'Search tracks, artists...',
+                                                border: InputBorder.none),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   Row(
                                     children: [
                                       SizedBox(
@@ -676,137 +716,164 @@ class ArtistScreen extends StatelessWidget {
                                   SizedBox(
                                     height: ScreenHelper().setheight(12),
                                   ),
-                                  ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: controller.artistTracks.length +
-                                        (controller.hasMoreTracks ? 1 : 0),
-                                    padding: EdgeInsets.only(
-                                      right: ScreenHelper().setWidth(8),
-                                      left: ScreenHelper().setWidth(8),
-                                      bottom: ScreenHelper().setWidth(50),
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      if (index <
-                                          controller.artistTracks.length) {
-                                        final track =
-                                            controller.artistTracks[index];
-                                        return GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(
-                                              context,
-                                            )
-                                                .push(
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        TrackChartScreen(
-                                                            track.track_id
-                                                                .toString(),
-                                                            track.track_name
-                                                                .toString()),
-                                              ),
-                                            )
-                                                .then((value) {
-                                              Get.delete<
-                                                  TrackChartController>();
-                                            });
-                                          },
-                                          child: Container(
-                                            height:
-                                                ScreenHelper().setheight(80),
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: ScreenHelper()
-                                                    .setheight(6)),
-                                            decoration: BoxDecoration(
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.04),
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(
-                                                      ScreenHelper()
-                                                          .setRadius(30)),
-                                                  bottomLeft: Radius.circular(
-                                                      ScreenHelper()
-                                                          .setRadius(30)),
-                                                  topRight: Radius.circular(
-                                                      ScreenHelper()
-                                                          .setRadius(10)),
-                                                  bottomRight: Radius.circular(
-                                                      ScreenHelper()
-                                                          .setRadius(10)),
-                                                )),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                  backgroundColor:
-                                                      Color(0xff3B4E5F)
-                                                          .withOpacity(0.04),
-                                                  radius: ScreenHelper()
-                                                      .setRadius(35),
-                                                  backgroundImage:
-                                                      CachedNetworkImageProvider(
-                                                    EndPoint.base +
-                                                        track.picture_url
-                                                            .toString(),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: ScreenHelper()
-                                                      .setWidth(8),
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      track.track_name
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontSize: ScreenHelper()
-                                                            .setFont(16),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${controller.formatNumber(track.listen_counter!)} Played',
-                                                      style: TextStyle(
-                                                        fontSize: ScreenHelper()
-                                                            .setFont(14),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Spacer(),
-                                                Text(
-                                                  '${index + 1}',
-                                                  style: TextStyle(
-                                                    color: Color(0xffFF0055),
-                                                    fontSize: ScreenHelper()
-                                                        .setFont(20),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: ScreenHelper()
-                                                      .setWidth(5),
-                                                )
-                                              ],
-                                            ),
+                                  !controller.isLoadingTracks.value &&
+                                          controller.artistTracks.length > 0
+                                      ? ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              controller.artistTracks.length +
+                                                  (controller.hasMoreTracks
+                                                      ? 1
+                                                      : 0),
+                                          padding: EdgeInsets.only(
+                                            right: ScreenHelper().setWidth(8),
+                                            left: ScreenHelper().setWidth(8),
+                                            bottom: ScreenHelper().setWidth(50),
                                           ),
-                                        );
-                                      } else if (controller.hasMoreTracks &&
-                                          !controller.isLoadingMore.value &&
-                                          controller.lastPage.value <
-                                              controller
-                                                  .currentTrackPage.value) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      } else {
-                                        return SizedBox.shrink();
-                                      }
-                                    },
-                                  ),
+                                          itemBuilder: (context, index) {
+                                            if (index <
+                                                controller
+                                                    .artistTracks.length) {
+                                              final track = controller
+                                                  .artistTracks[index];
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.of(
+                                                    context,
+                                                  )
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          TrackChartScreen(
+                                                              track.track_id
+                                                                  .toString(),
+                                                              track.track_name
+                                                                  .toString()),
+                                                    ),
+                                                  )
+                                                      .then((value) {
+                                                    Get.delete<
+                                                        TrackChartController>();
+                                                  });
+                                                },
+                                                child: Container(
+                                                  height: ScreenHelper()
+                                                      .setheight(80),
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: ScreenHelper()
+                                                          .setheight(6)),
+                                                  decoration: BoxDecoration(
+                                                      color: Color(0xff3B4E5F)
+                                                          .withOpacity(0.04),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                ScreenHelper()
+                                                                    .setRadius(
+                                                                        30)),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                ScreenHelper()
+                                                                    .setRadius(
+                                                                        30)),
+                                                        topRight:
+                                                            Radius.circular(
+                                                                ScreenHelper()
+                                                                    .setRadius(
+                                                                        10)),
+                                                        bottomRight:
+                                                            Radius.circular(
+                                                                ScreenHelper()
+                                                                    .setRadius(
+                                                                        10)),
+                                                      )),
+                                                  child: Row(
+                                                    children: [
+                                                      CircleAvatar(
+                                                        backgroundColor: Color(
+                                                                0xff3B4E5F)
+                                                            .withOpacity(0.04),
+                                                        radius: ScreenHelper()
+                                                            .setRadius(35),
+                                                        backgroundImage:
+                                                            CachedNetworkImageProvider(
+                                                          EndPoint.base +
+                                                              track.picture_url
+                                                                  .toString(),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: ScreenHelper()
+                                                            .setWidth(8),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            track.track_name
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  ScreenHelper()
+                                                                      .setFont(
+                                                                          16),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '${controller.formatNumber(track.listen_counter!)} Played',
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  ScreenHelper()
+                                                                      .setFont(
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Spacer(),
+                                                      Text(
+                                                        '${index + 1}',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xffFF0055),
+                                                          fontSize:
+                                                              ScreenHelper()
+                                                                  .setFont(20),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: ScreenHelper()
+                                                            .setWidth(5),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            } else if (controller.hasMoreTracks &&
+                                                !controller
+                                                    .isLoadingMore.value &&
+                                                controller.lastPage.value <
+                                                    controller.currentTrackPage
+                                                        .value) {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            } else {
+                                              return SizedBox.shrink();
+                                            }
+                                          },
+                                        )
+                                      : const CircularProgressIndicator(),
                                   SizedBox(
                                     height: ScreenHelper().setheight(20),
                                   ),
