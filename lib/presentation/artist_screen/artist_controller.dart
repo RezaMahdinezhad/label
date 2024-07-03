@@ -29,7 +29,7 @@ class ArtistDataController extends GetxController {
 
   var isLoading = true.obs;
   final ScrollController scrollController = ScrollController();
-  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController searchInTracks = TextEditingController();
 
   String formatNumber(int number) {
     if (number >= 1000 && number < 1000000) {
@@ -125,7 +125,7 @@ class ArtistDataController extends GetxController {
         currentTrackPage.value++;
         await getLabelTracks(
             order: order.value,
-            name: textEditingController.text,
+            name: searchInTracks.text,
             artistId: artistId.value,
             page: currentTrackPage.value);
         isLoadingMore.value = false;

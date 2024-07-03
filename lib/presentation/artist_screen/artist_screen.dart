@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:label/common/helper/screen_helper.dart';
 import 'package:label/domain/repository/remote/endpoint.dart';
@@ -685,18 +686,18 @@ class ArtistScreen extends StatelessWidget {
                                                   artistId: controller
                                                       .artistId.value);
                                             },
-                                            controller: controller
-                                                .textEditingController,
+                                            controller:
+                                                controller.searchInTracks,
                                             decoration: InputDecoration(
                                                 hintText:
-                                                    'Search tracks, artists...',
+                                                    'Search tracks, artists, lyrics...',
                                                 border: InputBorder.none),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: ScreenHelper.deWidth / 4,
                                           height: ScreenHelper.dHeight / 15,
                                           child:
@@ -706,8 +707,88 @@ class ArtistScreen extends StatelessWidget {
                                             isExpanded: true,
                                             hint: Text('All Artists'),
                                             elevation: 0,
-                                            onChanged: (value) {},
+                                            onChanged: (value) async {
+                                              controller
+                                                  .currentTrackPage.value = 1;
+                                              controller.isLoadingTracks.value =
+                                                  true;
+
+                                              controller.update();
+                                              await controller.getLabelTracks(
+                                                order: controller.order.value,
+                                                name: controller
+                                                    .searchInTracks.text,
+                                                page: controller
+                                                    .currentTrackPage.value,
+                                                artistId: value.toString(),
+                                              );
+                                            },
                                             items: controller.allArtistItems,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                            decoration: InputDecoration(
+                                              icon: const SizedBox(),
+                                              border: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        SizedBox(
+                                          width: ScreenHelper.deWidth / 6,
+                                          height: ScreenHelper.dHeight / 15,
+                                          child: DropdownButtonFormField<int>(
+                                            autovalidateMode:
+                                                AutovalidateMode.disabled,
+                                            isExpanded: true,
+                                            hint: Text('Sort by'),
+                                            elevation: 0,
+                                            onChanged: (value) async {
+                                              controller
+                                                  .currentTrackPage.value = 1;
+                                              controller.order.value =
+                                                  value ?? 2;
+                                              controller.isLoadingTracks.value =
+                                                  true;
+
+                                              controller.update();
+                                              await controller.getLabelTracks(
+                                                order: controller.order.value,
+                                                name: controller
+                                                    .searchInTracks.text,
+                                                page: controller
+                                                    .currentTrackPage.value,
+                                                artistId: controller.artistId
+                                                    .toString(),
+                                              );
+                                            },
+                                            items: [
+                                              DropdownMenuItem(
+                                                child: Text('Newest'),
+                                                value: 0,
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('Oldest'),
+                                                value: 1,
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('Most Popular'),
+                                                value: 2,
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('Total Play'),
+                                                value: 3,
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('A -> Z'),
+                                                value: 4,
+                                              ),
+                                              DropdownMenuItem(
+                                                child: Text('Z -> A'),
+                                                value: 5,
+                                              ),
+                                            ],
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(8)),
                                             decoration: InputDecoration(
