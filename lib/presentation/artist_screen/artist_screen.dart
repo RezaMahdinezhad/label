@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:label/common/helper/screen_helper.dart';
 import 'package:label/domain/repository/remote/endpoint.dart';
 import 'package:label/presentation/artist_screen/artist_controller.dart';
+import 'package:label/presentation/label_single_artist/label_single_controller.dart';
+import 'package:label/presentation/label_single_artist/label_single_screen.dart';
 import 'package:label/presentation/trackchart/track_chart_controller.dart';
 import 'package:label/presentation/trackchart/track_chart_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1279,7 +1281,31 @@ class ArtistScreen extends StatelessWidget {
                                                                 .labelSingleArtists
                                                                 .length) {
                                                           return GestureDetector(
-                                                            onTap: () {},
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                context,
+                                                              )
+                                                                  .push(
+                                                                MaterialPageRoute(
+                                                                  builder: (BuildContext context) => LabelSingleScreen(
+                                                                      controller
+                                                                          .labelSingleArtists[
+                                                                              index]
+                                                                          .artist_id
+                                                                          .toString(),
+                                                                      controller
+                                                                          .labelSingleArtists[
+                                                                              index]
+                                                                          .artist_name
+                                                                          .toString()),
+                                                                ),
+                                                              )
+                                                                  .then(
+                                                                      (value) {
+                                                                Get.delete<
+                                                                    LabelSingleArtistController>();
+                                                              });
+                                                            },
                                                             child: Container(
                                                               height:
                                                                   ScreenHelper()

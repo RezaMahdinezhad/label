@@ -56,4 +56,6 @@ abstract class IRepository {
     required String name,
     required int page,
   });
+  Future<Either<Failure, Success>> fetchLabelSingleArtistChartData(
+      String id, String days);
 }
