@@ -3,22 +3,22 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class LabelArtists extends Equatable {
+class LabelAllArtists extends Equatable {
   String? name;
   int? artist_id;
   String? picture_url;
-  LabelArtists({
+  LabelAllArtists({
     this.name,
     this.artist_id,
     this.picture_url,
   });
 
-  LabelArtists copyWith({
+  LabelAllArtists copyWith({
     String? name,
     int? artist_id,
     String? picture_url,
   }) {
-    return LabelArtists(
+    return LabelAllArtists(
       name: name ?? this.name,
       artist_id: artist_id ?? this.artist_id,
       picture_url: picture_url ?? this.picture_url,
@@ -33,8 +33,8 @@ class LabelArtists extends Equatable {
     };
   }
 
-  factory LabelArtists.fromMap(Map<String, dynamic> map) {
-    return LabelArtists(
+  factory LabelAllArtists.fromMap(Map<String, dynamic> map) {
+    return LabelAllArtists(
       name: map['name'] != null ? map['name'] as String : null,
       artist_id: map['artist_id'] != null ? map['artist_id'] as int : null,
       picture_url:
@@ -44,8 +44,8 @@ class LabelArtists extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory LabelArtists.fromJson(String source) =>
-      LabelArtists.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LabelAllArtists.fromJson(String source) =>
+      LabelAllArtists.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool get stringify => true;

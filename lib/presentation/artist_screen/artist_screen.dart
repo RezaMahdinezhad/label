@@ -39,7 +39,7 @@ class ArtistScreen extends StatelessWidget {
                         scrollInfo.metrics.pixels >=
                             scrollInfo.metrics.maxScrollExtent) {
                       controller.isLoadingMore.value = true;
-                      controller.loadMoreTracks().then((_) {
+                      controller.loadMoreTracksorArtists().then((_) {
                         controller.isLoadingMore.value = false;
                       });
                     }
@@ -674,9 +674,14 @@ class ArtistScreen extends StatelessWidget {
                                   ),
                                   SizedBox(
                                     width: ScreenHelper.deWidth,
-                                    height: ScreenHelper.dHeight *
-                                        controller.artistTracks.length /
-                                        5,
+                                    height: controller.tabController!.index == 0
+                                        ? (ScreenHelper.dHeight *
+                                            controller.artistTracks.length /
+                                            5)
+                                        : (ScreenHelper.dHeight *
+                                            controller
+                                                .labelSingleArtists.length /
+                                            5),
                                     child: TabBarView(
                                       physics: NeverScrollableScrollPhysics(),
                                       controller: controller.tabController,
@@ -720,7 +725,8 @@ class ArtistScreen extends StatelessWidget {
                                                           controller.update();
                                                           await controller.getLabelTracks(
                                                               order: controller
-                                                                  .order.value,
+                                                                  .orderTracks
+                                                                  .value,
                                                               name: value,
                                                               page: controller
                                                                   .currentTrackPage
@@ -772,7 +778,8 @@ class ArtistScreen extends StatelessWidget {
                                                           await controller
                                                               .getLabelTracks(
                                                             order: controller
-                                                                .order.value,
+                                                                .orderTracks
+                                                                .value,
                                                             name: controller
                                                                 .searchInTracks
                                                                 .text,
@@ -822,8 +829,8 @@ class ArtistScreen extends StatelessWidget {
                                                           controller
                                                               .currentTrackPage
                                                               .value = 1;
-                                                          controller
-                                                                  .order.value =
+                                                          controller.orderTracks
+                                                                  .value =
                                                               value ?? 2;
                                                           controller
                                                               .isLoadingTracks
@@ -833,7 +840,8 @@ class ArtistScreen extends StatelessWidget {
                                                           await controller
                                                               .getLabelTracks(
                                                             order: controller
-                                                                .order.value,
+                                                                .orderTracks
+                                                                .value,
                                                             name: controller
                                                                 .searchInTracks
                                                                 .text,
@@ -892,26 +900,6 @@ class ArtistScreen extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SizedBox(
-                                                    width: ScreenHelper()
-                                                        .setWidth(20),
-                                                  ),
-                                                  Text(
-                                                    'Top Songs',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: ScreenHelper()
-                                                            .setFont(16)),
-                                                  ),
-                                                  Spacer(),
-                                                  SizedBox(
-                                                    width: ScreenHelper()
-                                                        .setWidth(20),
-                                                  ),
-                                                ],
                                               ),
                                               SizedBox(
                                                 height: ScreenHelper()
@@ -1106,7 +1094,160 @@ class ArtistScreen extends StatelessWidget {
                                           physics:
                                               NeverScrollableScrollPhysics(),
                                           child: Column(
-                                            children: [Text('data')],
+                                            children: [
+                                              ListView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: controller
+                                                        .labelSingleArtists
+                                                        .length +
+                                                    (controller.hasmoreArtists
+                                                            .value
+                                                        ? 1
+                                                        : 0),
+                                                padding: EdgeInsets.only(
+                                                  right: ScreenHelper()
+                                                      .setWidth(8),
+                                                  left: ScreenHelper()
+                                                      .setWidth(8),
+                                                  bottom: ScreenHelper()
+                                                      .setWidth(50),
+                                                ),
+                                                itemBuilder: (context, index) {
+                                                  if (index <
+                                                      controller
+                                                          .labelSingleArtists
+                                                          .length) {
+                                                    return GestureDetector(
+                                                      onTap: () {},
+                                                      child: Container(
+                                                        height: ScreenHelper()
+                                                            .setheight(80),
+                                                        margin: EdgeInsets.symmetric(
+                                                            vertical:
+                                                                ScreenHelper()
+                                                                    .setheight(
+                                                                        6)),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Color(
+                                                                        0xff3B4E5F)
+                                                                    .withOpacity(
+                                                                        0.04),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft: Radius.circular(
+                                                                      ScreenHelper()
+                                                                          .setRadius(
+                                                                              30)),
+                                                                  bottomLeft: Radius.circular(
+                                                                      ScreenHelper()
+                                                                          .setRadius(
+                                                                              30)),
+                                                                  topRight: Radius.circular(
+                                                                      ScreenHelper()
+                                                                          .setRadius(
+                                                                              10)),
+                                                                  bottomRight: Radius.circular(
+                                                                      ScreenHelper()
+                                                                          .setRadius(
+                                                                              10)),
+                                                                )),
+                                                        child: Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              backgroundColor:
+                                                                  Color(0xff3B4E5F)
+                                                                      .withOpacity(
+                                                                          0.04),
+                                                              radius:
+                                                                  ScreenHelper()
+                                                                      .setRadius(
+                                                                          35),
+                                                              backgroundImage:
+                                                                  CachedNetworkImageProvider(
+                                                                EndPoint.base +
+                                                                    controller
+                                                                        .labelSingleArtists[
+                                                                            index]
+                                                                        .s_picture_url
+                                                                        .toString(),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width:
+                                                                  ScreenHelper()
+                                                                      .setWidth(
+                                                                          8),
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  controller
+                                                                      .labelSingleArtists[
+                                                                          index]
+                                                                      .artist_name
+                                                                      .toString(),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize: ScreenHelper()
+                                                                        .setFont(
+                                                                            16),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Spacer(),
+                                                            Text(
+                                                              '${index + 1}',
+                                                              style: TextStyle(
+                                                                color: Color(
+                                                                    0xffFF0055),
+                                                                fontSize:
+                                                                    ScreenHelper()
+                                                                        .setFont(
+                                                                            20),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width:
+                                                                  ScreenHelper()
+                                                                      .setWidth(
+                                                                          5),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else if (controller
+                                                          .hasmoreArtists
+                                                          .value &&
+                                                      !controller
+                                                          .isLoadingSingleArtists
+                                                          .value &&
+                                                      controller.lastArtistPage
+                                                              .value <
+                                                          controller
+                                                              .currentArtistPage
+                                                              .value) {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  } else {
+                                                    return SizedBox.shrink();
+                                                  }
+                                                },
+                                              )
+                                            ],
                                           ),
                                         ),
                                       ],

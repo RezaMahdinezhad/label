@@ -51,4 +51,9 @@ abstract class IRepository {
       String authToken, String trackId);
   Future<Either<Failure, Success>> fetchLabelSingleTrackChartData(
       String authToken, String trackId, String days);
+  Future<Either<Failure, Success>> fetchLabelSingleArtist({
+    required int order,
+    required String name,
+    required int page,
+  });
 }

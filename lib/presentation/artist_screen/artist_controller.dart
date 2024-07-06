@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:label/domain/models/failure.dart';
 import 'package:label/domain/models/receive/artist_data_model.dart';
 import 'package:label/domain/models/receive/label_artists.dart';
+import 'package:label/domain/models/receive/label_single_artist_model.dart';
 import 'package:label/domain/models/receive/message_madel.dart';
 import 'package:label/domain/models/receive/track_model.dart';
 import 'package:label/domain/models/succes.dart';
@@ -31,6 +32,7 @@ class ArtistDataController extends GetxController
   var isLoading = true.obs;
   final ScrollController scrollController = ScrollController();
   final TextEditingController searchInTracks = TextEditingController();
+  final TextEditingController searchInArtists = TextEditingController();
   TabController? tabController;
 
   String formatNumber(int number) {
@@ -69,7 +71,7 @@ class ArtistDataController extends GetxController
               scrollController.position.maxScrollExtent &&
           lastPage.value > currentTrackPage.value) {
         print('shoooddddd');
-        loadMoreTracks();
+        loadMoreTracksorArtists();
       }
       print('nashoodddd');
     });
@@ -120,7 +122,7 @@ class ArtistDataController extends GetxController
     }
   }
 
-  Future<void> loadMoreTracks() async {
+  Future<void> loadMoreTracksorArtists() async {
     if (hasMoreTracks) {
       if (globeController.loginType.value == 1) {
         isLoadingMore.value = true;
@@ -128,19 +130,29 @@ class ArtistDataController extends GetxController
         await getTracks();
         isLoadingMore.value = false;
       } else {
-        isLoadingMore.value = true;
-        currentTrackPage.value++;
-        await getLabelTracks(
-            order: order.value,
-            name: searchInTracks.text,
-            artistId: artistId.value,
-            page: currentTrackPage.value);
-        isLoadingMore.value = false;
+        if (tabController!.index == 0) {
+          isLoadingMore.value = true;
+          currentTrackPage.value++;
+          await getLabelTracks(
+              order: orderTracks.value,
+              name: searchInTracks.text,
+              artistId: artistId.value,
+              page: currentTrackPage.value);
+          isLoadingMore.value = false;
+        } else {
+          isLoadingSingleArtists.value = true;
+          currentArtistPage.value++;
+          await getLabelSingleArtists(
+              order: orderArtists.value,
+              name: searchInArtists.text,
+              page: currentArtistPage.value);
+        }
       }
     }
   }
 
-  RxInt order = 0.obs;
+  RxInt orderTracks = 0.obs;
+  RxInt orderArtists = 0.obs;
   RxString artistId = ''.obs;
 
   Future<void> fetchArtistDataOnrefresh() async {
@@ -157,7 +169,62 @@ class ArtistDataController extends GetxController
   Future<void> fetchLabelData() async {
     await getLabelData();
     await getLabelTracks(order: 2, name: '', page: 1, artistId: '');
+    await getLabelSingleArtists(order: 2, name: '', page: 1);
     await getLabelAllArtists();
+  }
+
+  RxInt currentArtistPage = 1.obs;
+  RxInt lastArtistPage = 1.obs;
+
+  List<LabelSingleArtist> labelSingleArtists = [];
+  RxBool isLoadingSingleArtists = true.obs;
+  RxBool hasmoreArtists = true.obs;
+  getLabelSingleArtists({
+    required int order,
+    required String name,
+    required int page,
+  }) async {
+    update();
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelSingleArtist(
+        order: order,
+        name: name,
+        page: page,
+      );
+      result.fold((l) async {
+        isLoadingSingleArtists.value = true;
+
+        print('Failed to fetch artist tracks: nashoooodd');
+      }, (r) async {
+        if (page == 1) {
+          labelSingleArtists.clear();
+        }
+        currentArtistPage.value = r.data['current_page'] ?? 1;
+        lastArtistPage.value = r.data['last_page'] ?? 1;
+        if (currentArtistPage.value > lastArtistPage.value) {
+          hasmoreArtists.value = true;
+        } else {
+          hasmoreArtists.value = false;
+        }
+        update();
+        for (var item in r.data['data']) {
+          labelSingleArtists.add(LabelSingleArtist(
+            artist_id: item['artist_id'] ?? 0,
+            artist_name: item['artist_name'].toString(),
+            s_picture_url: item['s_picture_url'].toString(),
+          ));
+        }
+        log('kkkkk ${labelSingleArtists.length}');
+
+        isLoadingSingleArtists.value = false;
+
+        update();
+      });
+    } catch (error) {
+      isLoadingSingleArtists.value = false;
+
+      print('Error occurred while fetching artist tracks: $error');
+    }
   }
 
   RxBool isLoadingTracks = true.obs;
@@ -227,7 +294,7 @@ class ArtistDataController extends GetxController
   }
 
   RxBool isAllArtistsLoaded = false.obs;
-  List<LabelArtists> allArtists = [];
+  List<LabelAllArtists> allArtists = [];
 
   getLabelAllArtists() async {
     try {
@@ -237,7 +304,7 @@ class ArtistDataController extends GetxController
       }, (r) async {
         allArtists.clear();
         for (var item in r.data['data']) {
-          allArtists.add(LabelArtists(
+          allArtists.add(LabelAllArtists(
             name: item['name'].toString(),
             artist_id: item['artist_id'] ?? 0,
             picture_url: item['picture_url'].toString(),
