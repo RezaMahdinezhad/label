@@ -522,133 +522,140 @@ class ArtistScreen extends StatelessWidget {
                                   SizedBox(
                                     height: ScreenHelper().setheight(20),
                                   ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Bank',
-                                            style: TextStyle(
-                                                fontSize:
-                                                    ScreenHelper().setFont(14),
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.5)),
-                                          ),
-                                          Text(
-                                            controller.artistData.bank != 0.0 &&
-                                                    controller
-                                                            .artistData.bank <=
-                                                        0.5
-                                                ? '<1\$'
-                                                : '${controller.artistData.bank.toStringAsFixed(2)}\$',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenHelper().setFont(18),
-                                              color: Color(0xff3B4E5F),
+                                  SingleChildScrollView(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Bank',
+                                              style: TextStyle(
+                                                  fontSize: ScreenHelper()
+                                                      .setFont(14),
+                                                  color: Color(0xff3B4E5F)
+                                                      .withOpacity(0.5)),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: ScreenHelper().setWidth(16),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Income',
-                                            style: TextStyle(
+                                            Text(
+                                              controller.artistData.bank !=
+                                                          0.0 &&
+                                                      controller.artistData
+                                                              .bank <=
+                                                          0.5
+                                                  ? '<1\$'
+                                                  : '${controller.artistData.bank.toStringAsFixed(2)}\$',
+                                              style: TextStyle(
                                                 fontSize:
-                                                    ScreenHelper().setFont(14),
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.5)),
-                                          ),
-                                          Text(
-                                            controller.artistData
-                                                            .total_income !=
-                                                        0.0 &&
-                                                    controller.artistData
-                                                            .total_income <=
-                                                        0.5
-                                                ? '<1\$'
-                                                : '${controller.artistData.total_income.toStringAsFixed(2)}\$',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenHelper().setFont(18),
-                                              color: Color(0xff3B4E5F),
+                                                    ScreenHelper().setFont(18),
+                                                color: Color(0xff3B4E5F),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: ScreenHelper().setWidth(16),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Total Play',
-                                            style: TextStyle(
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: ScreenHelper().setWidth(16),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Income',
+                                              style: TextStyle(
+                                                  fontSize: ScreenHelper()
+                                                      .setFont(14),
+                                                  color: Color(0xff3B4E5F)
+                                                      .withOpacity(0.5)),
+                                            ),
+                                            Text(
+                                              controller.artistData
+                                                              .total_income !=
+                                                          0.0 &&
+                                                      controller.artistData
+                                                              .total_income <=
+                                                          0.5
+                                                  ? '<1\$'
+                                                  : '${controller.artistData.total_income.toStringAsFixed(2)}\$',
+                                              style: TextStyle(
                                                 fontSize:
-                                                    ScreenHelper().setFont(14),
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.5)),
-                                          ),
-                                          Text(
-                                            '${controller.formatNumber(controller.artistData.total_play!)}',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenHelper().setFont(18),
-                                              color: Color(0xff3B4E5F),
+                                                    ScreenHelper().setFont(18),
+                                                color: Color(0xff3B4E5F),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: ScreenHelper().setWidth(16),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Likes',
-                                            style: TextStyle(
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: ScreenHelper().setWidth(16),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Total Play',
+                                              style: TextStyle(
+                                                  fontSize: ScreenHelper()
+                                                      .setFont(14),
+                                                  color: Color(0xff3B4E5F)
+                                                      .withOpacity(0.5)),
+                                            ),
+                                            Text(
+                                              '${controller.formatNumber(controller.artistData.total_play!)}',
+                                              style: TextStyle(
                                                 fontSize:
-                                                    ScreenHelper().setFont(14),
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.5)),
-                                          ),
-                                          Text(
-                                            '${controller.formatNumber(controller.artistData.likes!)}',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenHelper().setFont(18),
-                                              color: Color(0xff3B4E5F),
+                                                    ScreenHelper().setFont(18),
+                                                color: Color(0xff3B4E5F),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: ScreenHelper().setWidth(16),
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Monthly Listeners',
-                                            style: TextStyle(
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: ScreenHelper().setWidth(16),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Likes',
+                                              style: TextStyle(
+                                                  fontSize: ScreenHelper()
+                                                      .setFont(14),
+                                                  color: Color(0xff3B4E5F)
+                                                      .withOpacity(0.5)),
+                                            ),
+                                            Text(
+                                              '${controller.formatNumber(controller.artistData.likes!)}',
+                                              style: TextStyle(
                                                 fontSize:
-                                                    ScreenHelper().setFont(14),
-                                                color: Color(0xff3B4E5F)
-                                                    .withOpacity(0.5)),
-                                          ),
-                                          Text(
-                                            '${controller.formatNumber(controller.artistData.monthly_listener!)}',
-                                            style: TextStyle(
-                                              fontSize:
-                                                  ScreenHelper().setFont(18),
-                                              color: Color(0xff3B4E5F),
+                                                    ScreenHelper().setFont(18),
+                                                color: Color(0xff3B4E5F),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          width: ScreenHelper().setWidth(16),
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Monthly Listeners',
+                                              style: TextStyle(
+                                                  fontSize: ScreenHelper()
+                                                      .setFont(14),
+                                                  color: Color(0xff3B4E5F)
+                                                      .withOpacity(0.5)),
+                                            ),
+                                            Text(
+                                              '${controller.formatNumber(controller.artistData.monthly_listener!)}',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    ScreenHelper().setFont(18),
+                                                color: Color(0xff3B4E5F),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                     height: ScreenHelper().setheight(6),
