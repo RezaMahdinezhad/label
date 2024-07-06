@@ -675,13 +675,13 @@ class ArtistScreen extends StatelessWidget {
                                   SizedBox(
                                     width: ScreenHelper.deWidth,
                                     height: controller.tabController!.index == 0
-                                        ? (ScreenHelper.dHeight *
-                                            controller.artistTracks.length /
-                                            5)
-                                        : (ScreenHelper.dHeight *
-                                            controller
-                                                .labelSingleArtists.length /
-                                            5),
+                                        ? (ScreenHelper.dHeight +
+                                            (controller.artistTracks.length *
+                                                ScreenHelper().setheight(80)))
+                                        : (ScreenHelper.dHeight +
+                                            (controller
+                                                    .labelSingleArtists.length *
+                                                ScreenHelper().setheight(80))),
                                     child: TabBarView(
                                       physics: NeverScrollableScrollPhysics(),
                                       controller: controller.tabController,
@@ -1095,158 +1095,308 @@ class ArtistScreen extends StatelessWidget {
                                               NeverScrollableScrollPhysics(),
                                           child: Column(
                                             children: [
-                                              ListView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemCount: controller
-                                                        .labelSingleArtists
-                                                        .length +
-                                                    (controller.hasmoreArtists
-                                                            .value
-                                                        ? 1
-                                                        : 0),
-                                                padding: EdgeInsets.only(
-                                                  right: ScreenHelper()
-                                                      .setWidth(8),
-                                                  left: ScreenHelper()
-                                                      .setWidth(8),
-                                                  bottom: ScreenHelper()
-                                                      .setWidth(50),
-                                                ),
-                                                itemBuilder: (context, index) {
-                                                  if (index <
-                                                      controller
-                                                          .labelSingleArtists
-                                                          .length) {
-                                                    return GestureDetector(
-                                                      onTap: () {},
-                                                      child: Container(
-                                                        height: ScreenHelper()
-                                                            .setheight(80),
-                                                        margin: EdgeInsets.symmetric(
-                                                            vertical:
-                                                                ScreenHelper()
-                                                                    .setheight(
-                                                                        6)),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                color: Color(
-                                                                        0xff3B4E5F)
-                                                                    .withOpacity(
-                                                                        0.04),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .only(
-                                                                  topLeft: Radius.circular(
-                                                                      ScreenHelper()
-                                                                          .setRadius(
-                                                                              30)),
-                                                                  bottomLeft: Radius.circular(
-                                                                      ScreenHelper()
-                                                                          .setRadius(
-                                                                              30)),
-                                                                  topRight: Radius.circular(
-                                                                      ScreenHelper()
-                                                                          .setRadius(
-                                                                              10)),
-                                                                  bottomRight: Radius.circular(
-                                                                      ScreenHelper()
-                                                                          .setRadius(
-                                                                              10)),
-                                                                )),
-                                                        child: Row(
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor:
-                                                                  Color(0xff3B4E5F)
-                                                                      .withOpacity(
-                                                                          0.04),
-                                                              radius:
-                                                                  ScreenHelper()
-                                                                      .setRadius(
-                                                                          35),
-                                                              backgroundImage:
-                                                                  CachedNetworkImageProvider(
-                                                                EndPoint.base +
-                                                                    controller
-                                                                        .labelSingleArtists[
-                                                                            index]
-                                                                        .s_picture_url
-                                                                        .toString(),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                                  ScreenHelper()
-                                                                      .setWidth(
-                                                                          8),
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  controller
-                                                                      .labelSingleArtists[
-                                                                          index]
-                                                                      .artist_name
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize: ScreenHelper()
-                                                                        .setFont(
-                                                                            16),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Spacer(),
-                                                            Text(
-                                                              '${index + 1}',
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    0xffFF0055),
-                                                                fontSize:
-                                                                    ScreenHelper()
-                                                                        .setFont(
-                                                                            20),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                                  ScreenHelper()
-                                                                      .setWidth(
-                                                                          5),
-                                                            )
-                                                          ],
-                                                        ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      width:
+                                                          ScreenHelper.deWidth /
+                                                              2,
+                                                      height:
+                                                          ScreenHelper.dHeight /
+                                                              15,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
                                                       ),
-                                                    );
-                                                  } else if (controller
-                                                          .hasmoreArtists
-                                                          .value &&
-                                                      !controller
-                                                          .isLoadingSingleArtists
-                                                          .value &&
-                                                      controller.lastArtistPage
-                                                              .value <
+                                                      child: TextFormField(
+                                                        onChanged:
+                                                            (value) async {
                                                           controller
                                                               .currentArtistPage
-                                                              .value) {
-                                                    return Center(
+                                                              .value = 1;
+                                                          controller
+                                                              .isLoadingSingleArtists
+                                                              .value = true;
+
+                                                          controller.update();
+                                                          await controller
+                                                              .getLabelSingleArtists(
+                                                            order: controller
+                                                                .orderArtists
+                                                                .value,
+                                                            name: value,
+                                                            page: controller
+                                                                .currentArtistPage
+                                                                .value,
+                                                          );
+                                                        },
+                                                        controller: controller
+                                                            .searchInTracks,
+                                                        decoration: InputDecoration(
+                                                            hintText:
+                                                                'Search artists ...',
+                                                            border: InputBorder
+                                                                .none),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          ScreenHelper.deWidth /
+                                                              5,
+                                                      height:
+                                                          ScreenHelper.dHeight /
+                                                              15,
                                                       child:
-                                                          CircularProgressIndicator(),
-                                                    );
-                                                  } else {
-                                                    return SizedBox.shrink();
-                                                  }
-                                                },
-                                              )
+                                                          DropdownButtonFormField<
+                                                              int>(
+                                                        autovalidateMode:
+                                                            AutovalidateMode
+                                                                .disabled,
+                                                        isExpanded: true,
+                                                        hint: Text('Sort by'),
+                                                        elevation: 0,
+                                                        onChanged:
+                                                            (value) async {
+                                                          controller
+                                                              .currentArtistPage
+                                                              .value = 1;
+                                                          controller
+                                                                  .orderArtists
+                                                                  .value =
+                                                              value ?? 3;
+                                                          controller
+                                                              .isLoadingSingleArtists
+                                                              .value = true;
+
+                                                          controller.update();
+                                                          await controller
+                                                              .getLabelSingleArtists(
+                                                            order: controller
+                                                                .orderArtists
+                                                                .value,
+                                                            name: controller
+                                                                .searchInArtists
+                                                                .text,
+                                                            page: controller
+                                                                .currentArtistPage
+                                                                .value,
+                                                          );
+                                                        },
+                                                        items: [
+                                                          DropdownMenuItem(
+                                                            child:
+                                                                Text('Income'),
+                                                            value: 0,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text('Bank'),
+                                                            value: 1,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text(
+                                                                'Followers'),
+                                                            value: 2,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text(
+                                                                'Monthly Listeners'),
+                                                            value: 3,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text(
+                                                                'Total Play'),
+                                                            value: 4,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text('A->Z'),
+                                                            value: 5,
+                                                          ),
+                                                          DropdownMenuItem(
+                                                            child: Text('Z->A'),
+                                                            value: 6,
+                                                          ),
+                                                        ],
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    8)),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          icon:
+                                                              const SizedBox(),
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: ScreenHelper()
+                                                    .setheight(12),
+                                              ),
+                                              !controller.isLoadingSingleArtists
+                                                      .value
+                                                  ? ListView.builder(
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemCount: controller
+                                                              .labelSingleArtists
+                                                              .length +
+                                                          (controller
+                                                                  .hasmoreArtists
+                                                                  .value
+                                                              ? 1
+                                                              : 0),
+                                                      padding: EdgeInsets.only(
+                                                        right: ScreenHelper()
+                                                            .setWidth(8),
+                                                        left: ScreenHelper()
+                                                            .setWidth(8),
+                                                        bottom: ScreenHelper()
+                                                            .setWidth(50),
+                                                      ),
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        if (index <
+                                                            controller
+                                                                .labelSingleArtists
+                                                                .length) {
+                                                          return GestureDetector(
+                                                            onTap: () {},
+                                                            child: Container(
+                                                              height:
+                                                                  ScreenHelper()
+                                                                      .setheight(
+                                                                          80),
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          ScreenHelper()
+                                                                              .setheight(6)),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      color: Color(
+                                                                              0xff3B4E5F)
+                                                                          .withOpacity(
+                                                                              0.04),
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .only(
+                                                                        topLeft:
+                                                                            Radius.circular(ScreenHelper().setRadius(30)),
+                                                                        bottomLeft:
+                                                                            Radius.circular(ScreenHelper().setRadius(30)),
+                                                                        topRight:
+                                                                            Radius.circular(ScreenHelper().setRadius(10)),
+                                                                        bottomRight:
+                                                                            Radius.circular(ScreenHelper().setRadius(10)),
+                                                                      )),
+                                                              child: Row(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    backgroundColor: Color(
+                                                                            0xff3B4E5F)
+                                                                        .withOpacity(
+                                                                            0.04),
+                                                                    radius: ScreenHelper()
+                                                                        .setRadius(
+                                                                            35),
+                                                                    backgroundImage:
+                                                                        CachedNetworkImageProvider(
+                                                                      EndPoint.base +
+                                                                          controller
+                                                                              .labelSingleArtists[index]
+                                                                              .s_picture_url
+                                                                              .toString(),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: ScreenHelper()
+                                                                        .setWidth(
+                                                                            8),
+                                                                  ),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        controller
+                                                                            .labelSingleArtists[index]
+                                                                            .artist_name
+                                                                            .toString(),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              ScreenHelper().setFont(16),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Spacer(),
+                                                                  Text(
+                                                                    '${index + 1}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Color(
+                                                                          0xffFF0055),
+                                                                      fontSize:
+                                                                          ScreenHelper()
+                                                                              .setFont(20),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: ScreenHelper()
+                                                                        .setWidth(
+                                                                            5),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else if (controller
+                                                                .hasmoreArtists
+                                                                .value &&
+                                                            !controller
+                                                                .isLoadingSingleArtists
+                                                                .value &&
+                                                            controller
+                                                                    .lastArtistPage
+                                                                    .value <
+                                                                controller
+                                                                    .currentArtistPage
+                                                                    .value) {
+                                                          return Center(
+                                                            child:
+                                                                CircularProgressIndicator(),
+                                                          );
+                                                        } else {
+                                                          return SizedBox
+                                                              .shrink();
+                                                        }
+                                                      },
+                                                    )
+                                                  : CircularProgressIndicator()
                                             ],
                                           ),
                                         ),
