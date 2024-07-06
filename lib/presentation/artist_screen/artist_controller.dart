@@ -15,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class ArtistDataController extends GetxController {
+class ArtistDataController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   late RepositoryImpl _repo;
   var artistDataList = <ArtistdataModel>[];
   // final loginController = Get.put(LoginController());
@@ -30,6 +31,7 @@ class ArtistDataController extends GetxController {
   var isLoading = true.obs;
   final ScrollController scrollController = ScrollController();
   final TextEditingController searchInTracks = TextEditingController();
+  TabController? tabController;
 
   String formatNumber(int number) {
     if (number >= 1000 && number < 1000000) {
@@ -48,6 +50,11 @@ class ArtistDataController extends GetxController {
   @override
   void onInit() {
     _repo = Get.put(RepositoryImpl());
+    tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: 0,
+    );
     globeController = Get.find<GlobeController>();
     if (globeController.loginType.value == 1) {
       fetchArtistData();
