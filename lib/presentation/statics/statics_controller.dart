@@ -55,7 +55,11 @@ class StaticsController extends GetxController {
   void onInit() {
     _repo = Get.put(RepositoryImpl());
     globeController = Get.find<GlobeController>();
-    getStaticsChartData(days.value);
+    if (globeController.loginType.value == 1) {
+      getStaticsChartData(days.value);
+    } else {
+      getLabelStaticsChartData(days.value);
+    }
     super.onInit();
   }
 
@@ -177,6 +181,61 @@ class StaticsController extends GetxController {
           sex1 = SexesModel.fromMap(success.data['Sexes'][0]);
           sex2 = SexesModel.fromMap(success.data['Sexes'][1]);
           sex3 = SexesModel.fromMap(success.data['Sexes'][2]);
+          isLoadingGraph.value = false;
+          isLoading.value = false;
+          update();
+        },
+      );
+    } catch (error) {
+      print('Error occurred while fetching artist statics data: $error');
+    }
+  }
+
+  getLabelStaticsChartData(String days) async {
+    try {
+      Either<Failure, Success> result = await _repo.fetchLabelStaticData(days);
+      result.fold(
+        (failure) {
+          print('Failed to fetch artist data: ${failure.message}');
+        },
+        (success) {
+          artistStaticsModel = ArtistStaticsModel(
+            artist_name: success.data['label']['name'].toString(),
+            picture_url: success.data['label']['picture_url'].toString(),
+            total_incom: success.data['label']['total_income'],
+            bank: success.data['label']['bank'],
+            like_counter: success.data['label']['like_counter'],
+            download_counter: success.data['label']['download_counter'],
+            total_listener: success.data['label']['total_listener'],
+          );
+
+          chartDate = Map<String, int>.from(success.data['listenersGraph']);
+          incomeDate = Map<String, dynamic>.from(success.data['incomeGraph']);
+          print('yyyyy-----////$incomeDate');
+
+          final topCountriesData = success.data['topCountries'];
+          topCountries.clear();
+          for (var item in topCountriesData) {
+            topCountries.add(TopCountriesModel.fromMap(item));
+          }
+
+          final topCitiesData = success.data['topCities'];
+          topCities.clear();
+          for (var item in topCitiesData) {
+            topCities.add(CityModel.fromMap(item));
+          }
+
+          // final topSexesData = success.data['Sexes'];
+          // topSexes.clear();
+          // for (var item in topSexesData) {
+          //   topSexes.add(SexesModel.fromMap(item));
+          // }
+
+          country1 = TopCountriesModel.fromMap(success.data['topCountries'][0]);
+          city1 = CityModel.fromMap(success.data['topCities'][0]);
+          // sex1 = SexesModel.fromMap(success.data['Sexes'][0]);
+          // sex2 = SexesModel.fromMap(success.data['Sexes'][1]);
+          // sex3 = SexesModel.fromMap(success.data['Sexes'][2]);
           isLoadingGraph.value = false;
           isLoading.value = false;
           update();

@@ -777,6 +777,9 @@ class ArtistScreen extends StatelessWidget {
                                                               .value = true;
 
                                                           controller.update();
+                                                          controller.artistId
+                                                                  .value =
+                                                              value ?? '';
                                                           await controller
                                                               .getLabelTracks(
                                                             order: controller
@@ -788,8 +791,8 @@ class ArtistScreen extends StatelessWidget {
                                                             page: controller
                                                                 .currentTrackPage
                                                                 .value,
-                                                            artistId: value
-                                                                .toString(),
+                                                            artistId: controller
+                                                                .artistId.value,
                                                           );
                                                         },
                                                         items: controller

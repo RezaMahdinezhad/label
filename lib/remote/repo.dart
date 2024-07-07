@@ -442,6 +442,22 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> fetchLabelStaticData(String days) async {
+    final formData = dio.FormData.fromMap(
+      {'days': days},
+    );
+    try {
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.labelGraph, data: formData);
+
+      final responseData = res.data;
+      return Right(Success(
+          data: responseData, message: 'static label loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed to fetch artist static'));
+    }
+  }
+
   Future<Either<Failure, Success>> fetchLabelSingleArtistChartData(
       String id, String days) async {
     final formData = dio.FormData.fromMap(
