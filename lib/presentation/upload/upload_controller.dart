@@ -53,6 +53,7 @@ class UploadController extends GetxController {
   var isInstagram = false.obs;
   var isFacebook = false.obs;
 
+  final TextEditingController artistNameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
   final TextEditingController melodyController = TextEditingController();
@@ -103,6 +104,12 @@ class UploadController extends GetxController {
   }
 
   bool isValid() {
+    if (globeController.loginType.value != 1) {
+      if (artistNameController.text == '') {
+        Fluttertoast.showToast(msg: 'Artist name field is required.');
+        return false;
+      }
+    }
     if (nameController.text == '') {
       Fluttertoast.showToast(msg: 'Track name field is required.');
       return false;
@@ -250,6 +257,51 @@ class UploadController extends GetxController {
         uploadTrackModel,
         croppedImage!,
         trackFile!);
+
+    res.fold((l) async {
+      isUploading.value = false;
+      Fluttertoast.showToast(msg: 'Failed to Upload files, Please try again.');
+
+      update();
+    }, (r) async {
+      Fluttertoast.showToast(
+          msg: 'Track ${uploadTrackModel.track_name} Uploaded Successfully.');
+      rebuildTrackPage();
+      update();
+    });
+  }
+
+  uploadLabeltrack() async {
+    isSingle.value ? uploadTrackModel.is_album = 0 : 1;
+
+    isSpotify.value ? uploadTrackModel.spotify = 1 : 0;
+    isApple.value ? uploadTrackModel.apple_music = 1 : 0;
+    isYoutube.value ? uploadTrackModel.youtube_music = 1 : 0;
+    isAmazon.value ? uploadTrackModel.amazon_music = 1 : 0;
+    isInstagram.value ? uploadTrackModel.instagram = 1 : 0;
+    isFacebook.value ? uploadTrackModel.facebook = 1 : 0;
+    feats.clear();
+
+    if (featController.text.isNotEmpty) {
+      feats.add(featController.text);
+    }
+
+    if (featController1.text.isNotEmpty) {
+      feats.add(featController1.text);
+    }
+
+    if (featController2.text.isNotEmpty) {
+      feats.add(featController2.text);
+    }
+
+    if (featController3.text.isNotEmpty) {
+      feats.add(featController3.text);
+    }
+
+    uploadTrackModel.sec_artists_name =
+        feats.toString().substring(1, feats.toString().length - 1);
+    Either<Failure, Success> res = await _repo.uploadLabelTrack(
+        artistNameController.text, uploadTrackModel, croppedImage!, trackFile!);
 
     res.fold((l) async {
       isUploading.value = false;

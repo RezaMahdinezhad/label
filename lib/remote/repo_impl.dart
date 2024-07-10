@@ -59,4 +59,6 @@ abstract class IRepository {
   Future<Either<Failure, Success>> fetchLabelSingleArtistChartData(
       String id, String days);
   Future<Either<Failure, Success>> fetchLabelStaticData(String days);
+  Future<Either<Failure, Success>> uploadLabelTrack(
+      String artistname, UploadTrackModel data, File image, File track);
 }

@@ -103,4 +103,7 @@ class EndPoint {
   static String labelSingleTrackGraph = "api/dangifyforlabel-singlegraph";
   static String labelArtistGraph = "api/dangifyforlabel-artistgraph";
   static String labelGraph = "api/dangifyforlabel-graph";
+  static String labelUpload = "api/dangifyforlabel-upload";
+  static String labelReview = "api/dangifyforlabel-review";
+  static String labelProfile = "api/dangifyforlabel-incomelog";
 }

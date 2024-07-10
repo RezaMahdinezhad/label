@@ -616,6 +616,36 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> uploadLabelTrack(
+      String artistname, UploadTrackModel data, File image, File track) async {
+    final mimeTypeImageData = lookupMimeType(image.path)?.split('/');
+    final mimeTypeTrackData = lookupMimeType(track.path.toString())?.split('/');
+
+    final formData = dio.FormData.fromMap(
+      {
+        'artist_name': artistname,
+        ...data.toMap(),
+        'cover': await dio.MultipartFile.fromFile(image.path,
+            contentType:
+                MediaType(mimeTypeImageData![0], mimeTypeImageData[1])),
+        'track': await dio.MultipartFile.fromFile(track.path.toString(),
+            contentType:
+                MediaType(mimeTypeTrackData![0], mimeTypeTrackData[1])),
+      },
+    );
+
+    try {
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.labelUpload, data: formData);
+
+      final responseData = res.data;
+      return Right(
+          Success(data: responseData, message: 'upload  track successfully'));
+    } catch (e) {
+      return Left(Failure(message: handleError(e)));
+    }
+  }
+
   Future<Either<Failure, Success>> getReviewTracks(String authToken) async {
     final formData = dio.FormData.fromMap(
       {
