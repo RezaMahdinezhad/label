@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:label/common/helper/screen_helper.dart';
 import 'package:label/domain/repository/remote/endpoint.dart';
 import 'package:label/presentation/edit_profile/edit_profile.dart';
@@ -1203,9 +1204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       (BuildContext context, int index) {
                                     return Container(
                                       height: ScreenHelper().setheight(80),
-                                      margin: EdgeInsets.symmetric(
-                                          vertical:
-                                              ScreenHelper().setheight(6)),
+                                      margin: EdgeInsets.all(
+                                          ScreenHelper().setheight(6)),
                                       decoration: BoxDecoration(
                                           color: Color(0xff3B4E5F)
                                               .withOpacity(0.04),
@@ -1215,15 +1215,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           )),
                                       child: Row(
                                         children: [
-                                          CachedNetworkImage(
-                                            imageUrl: EndPoint.base +
-                                                controller.profileTracks[index]
-                                                    .picture_url
-                                                    .toString(),
-                                            errorWidget: (context, url, error) {
-                                              return Image.asset(
-                                                  'assets/logo.png');
-                                            },
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  ScreenHelper().setRadius(10)),
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: EndPoint.base +
+                                                  controller
+                                                      .profileTracks[index]
+                                                      .picture_url
+                                                      .toString(),
+                                              errorWidget:
+                                                  (context, url, error) {
+                                                return Image.asset(
+                                                    'assets/logo.png');
+                                              },
+                                            ),
                                           ),
                                           SizedBox(
                                             width: ScreenHelper().setWidth(8),
