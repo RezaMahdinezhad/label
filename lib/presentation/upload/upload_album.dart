@@ -20,6 +20,53 @@ class UploadAlbum extends StatelessWidget {
                 SizedBox(
                   height: ScreenHelper().setheight(20),
                 ),
+                controller.globeController.loginType.value == 2
+                    ? Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xff5F6268).withOpacity(0.04),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  ScreenHelper().setRadius(10),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: ScreenHelper().setWidth(5),
+                                ),
+                                Text(
+                                  'Artist Name* : ',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Expanded(
+                                  child: FocusScope(
+                                    child: TextFormField(
+                                      focusNode:
+                                          FocusNode(canRequestFocus: false),
+                                      onChanged: (value) {},
+                                      controller:
+                                          controller.artistNameController,
+                                      style:
+                                          TextStyle(color: Color(0xff3B4E5F)),
+                                      decoration: InputDecoration(
+                                        hintText: 'Artist name',
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: ScreenHelper().setheight(5),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
                 Container(
                   decoration: BoxDecoration(
                     color: Color(0xff5F6268).withOpacity(0.04),

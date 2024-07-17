@@ -24,29 +24,53 @@ class ReviewController extends GetxController {
 
   getTracks() async {
     isLoading.value = true;
+    if (globeController.loginType.value == 1) {
+      try {
+        Either<Failure, Success> result =
+            await _repo.getReviewTracks(globeController.accessToken.toString());
+        result.fold(
+          (failure) {
+            print('Failed to fetch artist review data: ${failure.message}');
+          },
+          (success) {
+            final tracksData = success.data['review'];
+            if (reviewTrack.isNotEmpty) {
+              reviewTrack.clear();
+            }
+            for (var item in tracksData) {
+              reviewTrack.add(TrackReviewModel.fromMap(item));
+            }
+            isLoading.value = false;
 
-    try {
-      Either<Failure, Success> result =
-          await _repo.getReviewTracks(globeController.accessToken.toString());
-      result.fold(
-        (failure) {
-          print('Failed to fetch artist review data: ${failure.message}');
-        },
-        (success) {
-          final tracksData = success.data['review'];
-          if (reviewTrack.isNotEmpty) {
-            reviewTrack.clear();
-          }
-          for (var item in tracksData) {
-            reviewTrack.add(TrackReviewModel.fromMap(item));
-          }
-          isLoading.value = false;
+            update();
+          },
+        );
+      } catch (error) {
+        print('Error occurred while fetch artist review data: $error');
+      }
+    } else {
+      try {
+        Either<Failure, Success> result = await _repo.getLabelReviewTracks();
+        result.fold(
+          (failure) {
+            print('Failed to fetch artist review data: ${failure.message}');
+          },
+          (success) {
+            final tracksData = success.data['review'];
+            if (reviewTrack.isNotEmpty) {
+              reviewTrack.clear();
+            }
+            for (var item in tracksData) {
+              reviewTrack.add(TrackReviewModel.fromMap(item));
+            }
+            isLoading.value = false;
 
-          update();
-        },
-      );
-    } catch (error) {
-      print('Error occurred while fetch artist review data: $error');
+            update();
+          },
+        );
+      } catch (error) {
+        print('Error occurred while fetch artist review data: $error');
+      }
     }
   }
 }

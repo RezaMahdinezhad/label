@@ -665,6 +665,19 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> getLabelReviewTracks() async {
+    try {
+      dio.Response res =
+          await _httpService.postRequest(EndPoint.base + EndPoint.labelReview);
+
+      final responseData = res.data;
+      return Right(
+          Success(data: responseData, message: 'review  track successfully'));
+    } catch (e) {
+      return Left(Failure(message: handleError(e)));
+    }
+  }
+
   @override
   Future<Either<Failure, Success>> requestToJoin(RequestModel data) async {
     final formData = dio.FormData.fromMap(

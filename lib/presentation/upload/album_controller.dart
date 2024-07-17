@@ -54,6 +54,7 @@ class UploadAlbumController extends GetxController {
   List<String> feats = <String>[].obs;
 
   final TextEditingController albumNameController = TextEditingController();
+  final TextEditingController artistNameController = TextEditingController();
   final TextEditingController genereController = TextEditingController();
   final TextEditingController languageController = TextEditingController();
   final TextEditingController tagController = TextEditingController();
@@ -277,6 +278,12 @@ class UploadAlbumController extends GetxController {
   }
 
   bool isValid(int index) {
+    if (globeController.loginType.value == 2) {
+      if (artistNameController.text == '') {
+        Fluttertoast.showToast(msg: 'Artist name field is required.');
+        return false;
+      }
+    }
     if (albumNameController.text == '') {
       Fluttertoast.showToast(msg: 'Album name field is required.');
       return false;
@@ -433,26 +440,50 @@ class UploadAlbumController extends GetxController {
     uploadTrackModels[index].sec_artists_name =
         feats.toString().substring(1, feats.toString().length - 1);
     isUploading[index].value = true;
+    if (globeController.loginType.value == 1) {
+      Either<Failure, Success> res = await _repo.uploadTrack(
+          globeController.accessToken.toString(),
+          uploadTrackModels[index],
+          croppedImage!,
+          trackFiles[index]);
 
-    Either<Failure, Success> res = await _repo.uploadTrack(
-        globeController.accessToken.toString(),
-        uploadTrackModels[index],
-        croppedImage!,
-        trackFiles[index]);
+      res.fold((l) async {
+        isUploading[index].value = false;
+        Fluttertoast.showToast(
+            msg: 'Failed to Upload files, Please try again.');
 
-    res.fold((l) async {
-      isUploading[index].value = false;
-      Fluttertoast.showToast(msg: 'Failed to Upload files, Please try again.');
+        update();
+      }, (r) async {
+        isUploading[index].value = false;
 
-      update();
-    }, (r) async {
-      isUploading[index].value = false;
+        Fluttertoast.showToast(
+            msg:
+                'Track ${uploadTrackModels[index].track_name} for Album ${uploadTrackModels[index].album_name}  Uploaded Successfully.');
+        // rebuildTrackPage();
+        update();
+      });
+    } else {
+      Either<Failure, Success> res = await _repo.uploadLabelTrack(
+          artistNameController.text,
+          uploadTrackModels[index],
+          croppedImage!,
+          trackFiles[index]);
 
-      Fluttertoast.showToast(
-          msg:
-              'Track ${uploadTrackModels[index].track_name} for Album ${uploadTrackModels[index].album_name}  Uploaded Successfully.');
-      // rebuildTrackPage();
-      update();
-    });
+      res.fold((l) async {
+        isUploading[index].value = false;
+        Fluttertoast.showToast(
+            msg: 'Failed to Upload files, Please try again.');
+
+        update();
+      }, (r) async {
+        isUploading[index].value = false;
+
+        Fluttertoast.showToast(
+            msg:
+                'Track ${uploadTrackModels[index].track_name} for Album ${uploadTrackModels[index].album_name}  Uploaded Successfully.');
+        // rebuildTrackPage();
+        update();
+      });
+    }
   }
 }
