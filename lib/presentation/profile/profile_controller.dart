@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:get/get_rx/get_rx.dart';
 import 'package:label/domain/models/failure.dart';
+import 'package:label/domain/models/receive/label_profile_tracks.dart';
 import 'package:label/domain/models/receive/profile_model.dart';
 import 'package:label/domain/models/receive/user_data_model.dart';
 import 'package:label/domain/models/succes.dart';
@@ -148,34 +150,79 @@ class ProfileController extends GetxController {
     getProfileData();
   }
 
+  RxBool isLoadingMoreTracks = false.obs;
+  RxInt currentPage = 1.obs;
+  RxInt lastPage = 1.obs;
+  RxString fromDate = ''.obs;
+  RxString tomDate = ''.obs;
+  List<LabelProfileTracksModel> profileTracks = [];
+  ScrollController scrollController = ScrollController();
+
   Future<void> getProfileData() async {
-    try {
-      Either<Failure, Success> result = await _repo.fetchArtistProfileData(
-        globeController.accessToken.toString(),
-      );
-      result.fold(
-        (failure) {
-          print('Failed to fetch artist profileee data: ${failure.message}');
-        },
-        (success) {
-          profileModel = ProfileModel.fromMap(success.data['data']);
-          userdataModel = UserdataModel.fromMap(success.data['user_data']);
-          name = userdataModel.name ?? '';
-          email = userdataModel.email ?? '';
+    if (globeController.loginType.value == 1) {
+      try {
+        Either<Failure, Success> result = await _repo.fetchArtistProfileData(
+          globeController.accessToken.toString(),
+        );
+        result.fold(
+          (failure) {
+            print('Failed to fetch artist profileee data: ${failure.message}');
+          },
+          (success) {
+            profileModel = ProfileModel.fromMap(success.data['data']);
+            userdataModel = UserdataModel.fromMap(success.data['user_data']);
+            name = userdataModel.name ?? '';
+            email = userdataModel.email ?? '';
 
-          bio = profileModel.description ?? '';
-          instagram = profileModel.instagram_url ?? '';
-          youtube = profileModel.youtube_url ?? '';
-          facebook = profileModel.facebook_url ?? '';
+            bio = profileModel.description ?? '';
+            instagram = profileModel.instagram_url ?? '';
+            youtube = profileModel.youtube_url ?? '';
+            facebook = profileModel.facebook_url ?? '';
 
-          color1 = profileModel.color1 ?? '';
-          color2 = profileModel.color2 ?? '';
-          isLoading = false;
-          update();
-        },
-      );
-    } catch (error) {
-      print('Error occurred while fetching artist profile data: $error');
+            color1 = profileModel.color1 ?? '';
+            color2 = profileModel.color2 ?? '';
+            isLoading = false;
+            update();
+          },
+        );
+      } catch (error) {
+        print('Error occurred while fetching artist profile data: $error');
+      }
+    } else {
+      try {
+        Either<Failure, Success> result = await _repo.fetchLabelProfileData(
+            from: fromDate.value, to: tomDate.value, page: currentPage.value);
+        result.fold(
+          (failure) {
+            print('Failed to fetch artist profileee data: ${failure.message}');
+          },
+          (success) {
+            if (currentPage.value == 1) {
+              profileTracks.clear();
+            }
+            for (var item in success.data['data']) {
+              profileTracks.add(LabelProfileTracksModel(
+                trackId: item['track_id'],
+                date: item['date'],
+                track_name: item['track_name'],
+                picture_url: item['picture_url'],
+                artist_name: item['artist_name'],
+                country: item['country'],
+                city: item['city'],
+                value: item['value'],
+              ));
+            }
+            lastPage.value = success.data['last_page'];
+            if (lastPage.value > currentPage.value) {
+              isLoadingMoreTracks.value = true;
+            }
+            isLoading = false;
+            update();
+          },
+        );
+      } catch (error) {
+        print('Error occurred while fetching artist profile data: $error');
+      }
     }
   }
 }

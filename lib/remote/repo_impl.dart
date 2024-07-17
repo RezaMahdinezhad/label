@@ -62,4 +62,6 @@ abstract class IRepository {
   Future<Either<Failure, Success>> uploadLabelTrack(
       String artistname, UploadTrackModel data, File image, File track);
   Future<Either<Failure, Success>> getLabelReviewTracks();
+  Future<Either<Failure, Success>> fetchLabelProfileData(
+      {required String from, required String to, required int page});
 }

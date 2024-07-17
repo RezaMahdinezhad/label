@@ -349,6 +349,24 @@ class RepositoryImpl implements IRepository {
     }
   }
 
+  Future<Either<Failure, Success>> fetchLabelProfileData(
+      {required String from, required String to, required int page}) async {
+    final formData = dio.FormData.fromMap(
+      {'from': from, 'to': to, 'page': page},
+    );
+    try {
+      dio.Response res = await _httpService
+          .postRequest(EndPoint.base + EndPoint.labelProfile, data: formData);
+
+      final responseData = res.data;
+      // final profileData = responseData['data'];
+      return Right(Success(
+          data: responseData, message: 'label profile loaded successfully'));
+    } catch (e) {
+      return Left(Failure(message: 'Failed to fetch artist tracks'));
+    }
+  }
+
   Future<Either<Failure, Success>> loadArtist(String id) async {
     final formData = dio.FormData.fromMap(
       {'id': id},
