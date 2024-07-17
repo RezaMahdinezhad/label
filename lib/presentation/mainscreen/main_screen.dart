@@ -1,6 +1,7 @@
 import 'package:label/presentation/artist_screen/artist_screen.dart';
 import 'package:label/presentation/profile/profile.dart';
 import 'package:label/presentation/statics/statics.dart';
+import 'package:label/presentation/under_development/under_development.dart';
 import 'package:label/presentation/upload/upload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -79,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
       ArtistScreen(),
       StaticsScreen(),
       UploadScreen(),
-      ProfileScreen(),
+      UnderDevelopoment(),
     ];
   }
 }
